@@ -1,27 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine?</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
     <div class="background-hearts"></div>
-    
+    <div class="custom-cursor"></div>
+
     <div class="container" id="mainContainer">
         <!-- Creator Mode -->
         <div id="creatorMode" class="card hidden">
             <h1>Create a Valentine</h1>
             <p>Make a special personalized page regarding Valentine's Day.</p>
+
             <div class="input-group">
+                <label>Theme:</label>
+                <select id="themeSelector">
+                    <option value="classic">Classic Red</option>
+                    <option value="lavender">Lavender Dream</option>
+                    <option value="midnight">Midnight Romance</option>
+                </select>
                 <input type="text" id="senderName" placeholder="Your Name" required>
                 <input type="text" id="recipientName" placeholder="Their Name" required>
+                <textarea id="loveNote" placeholder="Write a short love note..." rows="3"></textarea>
+
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">3 Reasons you love them (optional):</p>
+                <input type="text" class="reason-input" placeholder="Reason 1">
+                <input type="text" class="reason-input" placeholder="Reason 2">
+                <input type="text" class="reason-input" placeholder="Reason 3">
             </div>
+
             <button id="createBtn" class="primary-btn">Create Link</button>
             <div id="linkOutput" class="hidden">
                 <input type="text" id="generatedLink" readonly>
@@ -31,13 +49,27 @@
 
         <!-- Proposal Mode -->
         <div id="proposalMode" class="card hidden">
-            <h1 id="proposalText">Will you be my Valentine?</h1>
-            <div class="gif-container">
-                <img src="https://media.tenor.com/K2OG19K3fjoAAAAi/mochi-peach.gif" alt="Cute begging bear" id="mainGif">
+            <div id="slideshowContainer" class="hidden">
+                <h2 id="slideshowText"></h2>
+                <button id="nextSlideBtn" class="primary-btn">Next &rarr;</button>
             </div>
-            <div class="buttons">
-                <button id="yesBtn" class="primary-btn">Yes</button>
-                <button id="noBtn" class="secondary-btn">No</button>
+
+            <div id="mainProposalContent" class="hidden">
+                <div id="noteContainer" class="love-note hidden">
+                    <p id="noteText"></p>
+                </div>
+
+                <h1 id="proposalText"></h1> <!-- Typed effect targets this -->
+
+                <div class="gif-container">
+                    <img src="https://media.tenor.com/K2OG19K3fjoAAAAi/mochi-peach.gif" alt="Cute begging bear"
+                        id="mainGif">
+                </div>
+
+                <div class="buttons">
+                    <button id="yesBtn" class="primary-btn">Yes</button>
+                    <button id="noBtn" class="secondary-btn">No</button>
+                </div>
             </div>
         </div>
 
@@ -48,9 +80,20 @@
             <div class="gif-container">
                 <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy kissing bears">
             </div>
+
+            <div id="datePlanner" class="hidden">
+                <h3>Pick a Date Idea:</h3>
+                <div class="date-options">
+                    <button class="date-btn" data-date="Movie Night 🎬">Movie Night 🎬</button>
+                    <button class="date-btn" data-date="Dinner 🍝">Dinner 🍝</button>
+                    <button class="date-btn" data-date="Picnic 🧺">Picnic 🧺</button>
+                </div>
+                <p id="dateFeedback" class="hidden"></p>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
