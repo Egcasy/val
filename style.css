@@ -10,6 +10,7 @@
     --cursor-color: #ff4d6d;
 }
 
+/* Themes */
 body.lavender {
     --primary-color: #9d4edd;
     --secondary-color: #e0aaff;
@@ -26,6 +27,32 @@ body.midnight {
     --glass-border: rgba(255, 255, 255, 0.1);
     --text-color: #ffe5ec;
     --cursor-color: #ff0054;
+}
+
+body.sunset {
+    --primary-color: #ffba08;
+    --secondary-color: #faa307;
+    --bg-gradient: linear-gradient(135deg, #f48c06 0%, #dc2f02 50%, #9d0208 100%);
+    --glass-bg: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --text-color: #370617;
+    --cursor-color: #ffba08;
+}
+
+body.ocean {
+    --primary-color: #48cae4;
+    --secondary-color: #90e0ef;
+    --bg-gradient: linear-gradient(135deg, #0077b6 0%, #00b4d8 50%, #caf0f8 100%);
+    --text-color: #03045e;
+    --cursor-color: #48cae4;
+}
+
+body.forest {
+    --primary-color: #588157;
+    --secondary-color: #a3b18a;
+    --bg-gradient: linear-gradient(135deg, #dad7cd 0%, #3a5a40 100%);
+    --text-color: #ffffff;
+    --cursor-color: #dad7cd;
 }
 
 * {
@@ -48,138 +75,61 @@ body {
     transition: background 0.5s ease;
 }
 
-/* Music Control */
-.music-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    cursor: none;
-    z-index: 1000;
-    font-size: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s;
-}
-
-.music-btn:hover {
-    transform: scale(1.1);
-}
-
-/* Lock Screen Overlay */
-.lock-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-
-.lock-content {
-    text-align: center;
-    padding: 2rem;
-}
-
-.lock-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-
-    0%,
-    20%,
-    50%,
-    80%,
-    100% {
-        transform: translateY(0);
-    }
-
-    40% {
-        transform: translateY(-20px);
-    }
-
-    60% {
-        transform: translateY(-10px);
-    }
-}
-
-/* Custom Cursor */
-.custom-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    background: var(--cursor-color);
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    mix-blend-mode: difference;
-    z-index: 9999;
-    transition: width 0.2s, height 0.2s, background 0.2s;
-}
-
-.custom-cursor.click {
-    width: 30px;
-    height: 30px;
-    opacity: 0.8;
-}
-
-.background-hearts {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* Floating Heart Animation */
-.heart {
-    position: absolute;
-    color: rgba(255, 255, 255, 0.6);
-    animation: float 6s linear infinite;
-    font-size: 20px;
-}
-
-@keyframes float {
-    0% {
-        transform: translateY(110vh) scale(0);
+/* Animations */
+@keyframes slideInUp {
+    from {
+        transform: translateY(50px);
         opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes floatElement {
+    0% {
+        transform: translateY(0px);
     }
 
     50% {
-        opacity: 0.8;
+        transform: translateY(-10px);
     }
 
     100% {
-        transform: translateY(-10vh) scale(1);
-        opacity: 0;
+        transform: translateY(0px);
     }
 }
 
-.container {
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
-    perspective: 1000px;
+@keyframes pulseBtn {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 }
 
+/* Elements with animations */
 .card {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
@@ -194,9 +144,28 @@ body {
     /* Prevent overflow */
     overflow-y: auto;
     /* Allow scroll if content is too tall */
+
+    /* Animation */
+    animation: slideInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Hide scrollbar for clean look */
+.gif-container img {
+    max-width: 100%;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    animation: floatElement 3s ease-in-out infinite;
+}
+
+#yesBtn {
+    animation: pulseBtn 2s infinite;
+}
+
+.fade-in-text {
+    animation: fadeIn 1.5s ease-in;
+}
+
+
+/* Rest of styles remain similar but cleaned up */
 .card::-webkit-scrollbar {
     width: 0;
     background: transparent;
@@ -235,6 +204,7 @@ p {
     margin-bottom: 1.5rem;
     font-style: italic;
     border-left: 4px solid var(--primary-color);
+    animation: slideInUp 1s ease-out;
 }
 
 .error-msg {
@@ -248,24 +218,19 @@ p {
 }
 
 @keyframes shake {
-    0% {
+
+    0%,
+    100% {
         transform: translateX(0);
     }
 
-    25% {
+    25%,
+    75% {
         transform: translateX(-10px);
     }
 
     50% {
         transform: translateX(10px);
-    }
-
-    75% {
-        transform: translateX(-10px);
-    }
-
-    100% {
-        transform: translateX(0);
     }
 }
 
@@ -275,6 +240,7 @@ p {
     padding: 1rem;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 15px;
+    animation: fadeIn 2s ease;
 }
 
 .timer-display {
@@ -379,12 +345,6 @@ textarea:focus {
     transition: all 0.2s ease;
 }
 
-.gif-container img {
-    max-width: 100%;
-    border-radius: 15px;
-    margin-bottom: 1rem;
-}
-
 #linkOutput {
     margin-top: 1rem;
     display: flex;
@@ -406,4 +366,135 @@ textarea:focus {
     50% {
         opacity: 0;
     }
+}
+
+/* Music & Lock */
+.music-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    cursor: none;
+    z-index: 1000;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s;
+    animation: fadeIn 2s ease;
+}
+
+.music-btn:hover {
+    transform: scale(1.1);
+}
+
+.lock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.lock-content {
+    text-align: center;
+    padding: 2rem;
+    animation: slideInUp 0.5s;
+}
+
+.lock-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-20px);
+    }
+
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background: var(--cursor-color);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    z-index: 9999;
+    transition: width 0.2s, height 0.2s, background 0.2s;
+}
+
+.custom-cursor.click {
+    width: 30px;
+    height: 30px;
+    opacity: 0.8;
+}
+
+.background-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    animation: float 6s linear infinite;
+    font-size: 20px;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(110vh) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+    }
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    perspective: 1000px;
 }
