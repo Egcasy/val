@@ -1,8 +1,5 @@
 // --- Audio Sounds (Base64) ---
 // Simple synthesized beep sounds converted to base64 to avoid external dependencies
-const popSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."); // Placeholder - will use a real simple blob generation
-const tadaSound = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...");
-
 // Function to generate simple beep/pop sounds using Web Audio API instead of large base64 strings
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -37,6 +34,15 @@ function playSound(type) {
             osc2.start(now + i * 0.1);
             osc2.stop(now + i * 0.1 + 0.4);
         });
+    } else if (type === 'error') {
+        // Error buzz
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
     }
 }
 
@@ -89,6 +95,9 @@ const reasons = params.get('reasons') ? params.get('reasons').split('|') : [];
 const startDateParam = params.get('startDate'); // YYYY-MM-DD
 const unlockTimeParam = params.get('unlock'); // ISO String
 const soundEnabled = params.get('sound') === 'true';
+const quizQ = params.get('quizQ');
+const quizA = params.get('quizA'); // Hashed in real app, but plain for simple client-side
+const musicId = params.get('music'); // YouTube Video ID
 
 // Apply Theme
 document.body.className = theme;
@@ -101,6 +110,16 @@ const successMode = document.getElementById('successMode');
 const lockScreen = document.getElementById('lockScreen');
 const unlockTimeDisplay = document.getElementById('unlockTimeDisplay');
 const countdownTimer = document.getElementById('countdownTimer');
+
+const musicContainer = document.getElementById('musicContainer');
+const musicToggle = document.getElementById('musicToggle');
+
+const quizContainer = document.getElementById('quizContainer');
+const quizQuestionDisplay = document.getElementById('quizQuestionDisplay');
+const quizInput = document.getElementById('quizInput');
+const quizSubmitBtn = document.getElementById('quizSubmitBtn');
+const quizError = document.getElementById('quizError');
+const mainContent = document.getElementById('mainContent');
 
 const slideshowContainer = document.getElementById('slideshowContainer');
 const slideshowText = document.getElementById('slideshowText');
@@ -124,6 +143,9 @@ const reasonInputs = document.querySelectorAll('.reason-input');
 const startDateInput = document.getElementById('startDate');
 const unlockInput = document.getElementById('unlockTime');
 const soundCheck = document.getElementById('enableSound');
+const quizQuestionInput = document.getElementById('quizQuestion');
+const quizAnswerInput = document.getElementById('quizAnswer');
+const musicUrlInput = document.getElementById('musicUrl');
 const createBtn = document.getElementById('createBtn');
 const linkOutput = document.getElementById('linkOutput');
 const generatedLink = document.getElementById('generatedLink');
@@ -162,6 +184,49 @@ if (unlockTimeParam) {
     }
 }
 
+// --- Background Music Logic ---
+let player;
+if (musicId) {
+    // Inject YouTube API
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = function () {
+        player = new YT.Player('musicContainer', {
+            height: '0',
+            width: '0',
+            videoId: musicId,
+            playerVars: {
+                'autoplay': 1,
+                'loop': 1,
+                'playlist': musicId,
+                'controls': 0
+            },
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    };
+
+    function onPlayerReady(event) {
+        // Mute button logic
+        musicToggle.classList.remove('hidden');
+        musicToggle.addEventListener('click', () => {
+            if (player.isMuted()) {
+                player.unMute();
+                musicToggle.textContent = '🎵';
+            } else {
+                player.mute();
+                musicToggle.textContent = '🔇';
+            }
+        });
+        // Auto-play might be blocked, so we try anyway
+        event.target.playVideo();
+    }
+}
+
 // --- Initialize View ---
 if (sender && recipient) {
     // Show Proposal Flow
@@ -173,29 +238,52 @@ if (sender && recipient) {
     if (startDateParam) {
         relationshipTimer.classList.remove('hidden');
         const start = new Date(startDateParam);
-
         setInterval(() => {
             const now = new Date();
             const diff = now - start;
-
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const years = Math.floor(days / 365);
             const remainingDays = days % 365;
-
             timerText.textContent = `${years} Years, ${remainingDays} Days`;
         }, 1000);
     }
 
-    if (reasons.length > 0) {
-        startSlideshow();
+    // Quiz Check
+    if (quizQ && quizA) {
+        quizContainer.classList.remove('hidden');
+        quizQuestionDisplay.textContent = quizQ;
+
+        quizSubmitBtn.addEventListener('click', () => {
+            if (quizInput.value.trim().toLowerCase() === quizA.toLowerCase()) {
+                if (soundEnabled) playSound('success');
+                quizContainer.classList.add('hidden');
+                initProposalContent(); // Proceed
+                // Try playing music again on user interaction
+                if (player) player.playVideo();
+            } else {
+                if (soundEnabled) playSound('error');
+                quizError.classList.remove('hidden');
+                quizContainer.classList.add('shake');
+                setTimeout(() => quizContainer.classList.remove('shake'), 500);
+            }
+        });
     } else {
-        showMainProposal();
+        initProposalContent();
     }
 
 } else {
     // Show Creator
     creatorMode.classList.remove('hidden');
     proposalMode.classList.add('hidden');
+}
+
+function initProposalContent() {
+    mainContent.classList.remove('hidden');
+    if (reasons.length > 0) {
+        startSlideshow();
+    } else {
+        showMainProposal();
+    }
 }
 
 // --- Creator Events ---
@@ -207,6 +295,21 @@ createBtn.addEventListener('click', () => {
     const sStart = startDateInput.value;
     const sUnlock = unlockInput.value;
     const sSound = soundCheck.checked;
+
+    // Bonus Features
+    const sQuizQ = quizQuestionInput.value.trim();
+    const sQuizA = quizAnswerInput.value.trim();
+    const sMusicUrl = musicUrlInput.value.trim();
+
+    // Extract YouTube ID
+    let sMusicId = '';
+    if (sMusicUrl) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = sMusicUrl.match(regExp);
+        if (match && match[2].length == 11) {
+            sMusicId = match[2];
+        }
+    }
 
     const sReasons = Array.from(reasonInputs)
         .map(input => input.value.trim())
@@ -226,6 +329,10 @@ createBtn.addEventListener('click', () => {
     if (sStart) fullUrl += `&startDate=${encodeURIComponent(sStart)}`;
     if (sUnlock) fullUrl += `&unlock=${encodeURIComponent(sUnlock)}`;
     if (sSound) fullUrl += `&sound=true`;
+    if (sQuizQ && sQuizA) {
+        fullUrl += `&quizQ=${encodeURIComponent(sQuizQ)}&quizA=${encodeURIComponent(sQuizA)}`;
+    }
+    if (sMusicId) fullUrl += `&music=${encodeURIComponent(sMusicId)}`;
 
     generatedLink.value = fullUrl;
     linkOutput.classList.remove('hidden');

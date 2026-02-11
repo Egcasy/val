@@ -31,6 +31,11 @@
         </div>
     </div>
 
+    <!-- YouTube Music Iframe (Hidden) -->
+    <div id="musicContainer" class="hidden"></div>
+    <!-- Music Mute Toggle -->
+    <button id="musicToggle" class="music-btn hidden">🎵</button>
+
     <div class="container" id="mainContainer">
         <!-- Creator Mode -->
         <div id="creatorMode" class="card hidden">
@@ -48,10 +53,17 @@
                 <input type="text" id="recipientName" placeholder="Their Name" required>
                 <textarea id="loveNote" placeholder="Write a short love note..." rows="3"></textarea>
 
-                <label>Start Date (Optional):</label>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">Optional Features:</p>
+
+                <input type="text" id="quizQuestion" placeholder="Quiz Question (e.g., Where did we meet?)">
+                <input type="text" id="quizAnswer" placeholder="Quiz Answer (e.g., Paris)">
+
+                <input type="text" id="musicUrl" placeholder="YouTube Music Link (e.g., https://youtu.be/...)">
+
+                <label>Start Date (Relationship Timer):</label>
                 <input type="date" id="startDate">
 
-                <label>Unlock Time (Optional):</label>
+                <label>Unlock Time (Open When):</label>
                 <input type="datetime-local" id="unlockTime">
 
                 <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
@@ -73,34 +85,45 @@
 
         <!-- Proposal Mode -->
         <div id="proposalMode" class="card hidden">
-            <!-- Relationship Timer -->
-            <div id="relationshipTimer" class="hidden">
-                <p>We've been together for:</p>
-                <div class="timer-display">
-                    <span id="timerText"></span>
-                </div>
+            <!-- Quiz Section (Gates everything else) -->
+            <div id="quizContainer" class="hidden">
+                <h1>One Question First...</h1>
+                <p id="quizQuestionDisplay"></p>
+                <input type="text" id="quizInput" placeholder="Your Answer">
+                <button id="quizSubmitBtn" class="primary-btn">Unlock ❤️</button>
+                <p id="quizError" class="error-msg hidden">Try again!</p>
             </div>
 
-            <div id="slideshowContainer" class="hidden">
-                <h2 id="slideshowText"></h2>
-                <button id="nextSlideBtn" class="primary-btn">Next &rarr;</button>
-            </div>
-
-            <div id="mainProposalContent" class="hidden">
-                <div id="noteContainer" class="love-note hidden">
-                    <p id="noteText"></p>
+            <div id="mainContent" class="hidden"> <!-- Wraps Timer, Slideshow, Proposal -->
+                <!-- Relationship Timer -->
+                <div id="relationshipTimer" class="hidden">
+                    <p>We've been together for:</p>
+                    <div class="timer-display">
+                        <span id="timerText"></span>
+                    </div>
                 </div>
 
-                <h1 id="proposalText"></h1> <!-- Typed effect targets this -->
-
-                <div class="gif-container">
-                    <img src="https://media.tenor.com/K2OG19K3fjoAAAAi/mochi-peach.gif" alt="Cute begging bear"
-                        id="mainGif">
+                <div id="slideshowContainer" class="hidden">
+                    <h2 id="slideshowText"></h2>
+                    <button id="nextSlideBtn" class="primary-btn">Next &rarr;</button>
                 </div>
 
-                <div class="buttons">
-                    <button id="yesBtn" class="primary-btn">Yes</button>
-                    <button id="noBtn" class="secondary-btn">No</button>
+                <div id="mainProposalContent" class="hidden">
+                    <div id="noteContainer" class="love-note hidden">
+                        <p id="noteText"></p>
+                    </div>
+
+                    <h1 id="proposalText"></h1> <!-- Typed effect targets this -->
+
+                    <div class="gif-container">
+                        <img src="https://media.tenor.com/K2OG19K3fjoAAAAi/mochi-peach.gif" alt="Cute begging bear"
+                            id="mainGif">
+                    </div>
+
+                    <div class="buttons">
+                        <button id="yesBtn" class="primary-btn">Yes</button>
+                        <button id="noBtn" class="secondary-btn">No</button>
+                    </div>
                 </div>
             </div>
         </div>
