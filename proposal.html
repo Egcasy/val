@@ -60,10 +60,17 @@
                 <button id="nextSlideBtn" class="primary-btn">Next &rarr;</button>
             </div>
 
-            <!-- Timeline Section -->
-            <div id="timelineContainer" class="hidden">
-                <h2>Our Story 📖</h2>
-                <div class="timeline" id="timeline"></div>
+            <!-- Bouquet Section -->
+            <div id="bouquetContainer" class="hidden">
+                <h2>Pick your favorite bouquet 💐</h2>
+                <div class="bouquet-options">
+                    <button class="bouquet-btn" data-flower="Roses">🌹 Roses</button>
+                    <button class="bouquet-btn" data-flower="Tulips">🌷 Tulips</button>
+                    <button class="bouquet-btn" data-flower="Sunflowers">🌻 Sunflowers</button>
+                    <button class="bouquet-btn" data-flower="Mixed">💐 Mixed</button>
+                </div>
+                <div id="flowerAnimContainer"></div>
+                <button id="finishBouquetBtn" class="primary-btn hidden">Beautiful choice! ❤️</button>
             </div>
 
             <div id="mainProposalContent" class="hidden">
@@ -106,14 +113,28 @@
                         alt="Happy kissing bears">
                 </div>
 
-                <div id="datePlanner" class="hidden">
+                <div id="datePlanner" class="hidden reveal-on-scroll" style="margin-top: 2rem;">
                     <h3>Pick a Date Idea:</h3>
                     <div class="date-options">
                         <button class="date-btn" data-date="Movie Night 🎬">Movie Night 🎬</button>
                         <button class="date-btn" data-date="Dinner 🍝">Dinner 🍝</button>
                         <button class="date-btn" data-date="Picnic 🧺">Picnic 🧺</button>
                     </div>
-                    <p id="dateFeedback" class="hidden"></p>
+                </div>
+
+                <!-- Virtual Gift Box -->
+                <div id="giftContainer" class="hidden reveal-on-scroll" style="margin-top: 3rem;">
+                    <h3>Wait, one more thing... 🎁</h3>
+                    <div class="gift-box" id="giftBox">
+                        <div class="gift-lid"></div>
+                        <div class="gift-body"></div>
+                        <div class="gift-bow"></div>
+                    </div>
+                    <div id="giftReveal" class="hidden fade-in-text">
+                        <img src="https://media.tenor.com/7S_O1rLnt-8AAAAi/cute-cat.gif" alt="Surprise!"
+                            style="max-width: 150px; border-radius: 10px;">
+                        <p style="font-weight: 600; margin-top: 1rem;">A little extra love for you! ✨</p>
+                    </div>
                 </div>
             </div>
         </div>

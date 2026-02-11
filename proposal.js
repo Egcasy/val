@@ -308,8 +308,116 @@ document.querySelectorAll('.primary-btn, .secondary-btn, .date-btn').forEach(btn
     btn.addEventListener('click', createRipple);
 });
 
+// --- Bouquet Logic ---
+bouquetButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        createRipple(e);
+        if (soundEnabled) playSound('pop');
+
+        // Remove selection from others
+        bouquetButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        const flower = btn.getAttribute('data-flower');
+        spawnFlowerRain(flower === 'Roses' ? '🌹' : (flower === 'Tulips' ? '🌷' : (flower === 'Sunflowers' ? '🌻' : '💐')));
+
+        finishBouquetBtn.classList.remove('hidden');
+        finishBouquetBtn.classList.add('fade-in-text');
+    });
+});
+
+function spawnFlowerRain(emoji) {
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const el = document.createElement('div');
+            el.textContent = emoji;
+            el.className = 'flower-rain';
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.top = '-50px';
+            el.style.fontSize = Math.random() * 20 + 20 + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }, i * 100);
+    }
+}
+
+finishBouquetBtn.addEventListener('click', (e) => {
+    createRipple(e);
+    if (soundEnabled) playSound('pop');
+    bouquetContainer.classList.add('hidden');
+    showMainProposal();
+});
+
+// --- Gift Logic ---
+giftBox.addEventListener('click', () => {
+    if (!giftBox.classList.contains('open')) {
+        if (soundEnabled) playSound('success');
+        giftBox.classList.add('open');
+        setTimeout(() => {
+            giftReveal.classList.remove('hidden');
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }, 800);
+    }
+});
+
+// --- Sparkle Effect ---
+document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.92) {
+        createSparkle(e.clientX, e.clientY);
+    }
+});
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = x + 'px';
+    sparkle.style.top = y + 'px';
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 1000);
+}
+
+// --- Dynamic Flow Control ---
+function initProposalContent() {
+    mainContent.classList.remove('hidden');
+    const flow = [];
+    if (timelineEvents.length > 0) flow.push('timeline');
+    if (reasons.length > 0) flow.push('slideshow');
+    if (bouquetButtons.length > 0) flow.push('bouquet'); // Only if bouquet buttons exist
+    flow.push('proposal');
+
+    startFlow(flow, 0);
+}
+
+function startFlow(flow, index) {
+    if (index >= flow.length) {
+        showMainProposal();
+        return;
+    }
+
+    const step = flow[index];
+    if (step === 'timeline') renderTimeline(() => startFlow(flow, index + 1));
+    else if (step === 'slideshow') startSlideshow(() => startFlow(flow, index + 1));
+    else if (step === 'bouquet') showBouquetSelection(() => startFlow(flow, index + 1));
+    else if (step === 'proposal') showMainProposal();
+}
+
+function showBouquetSelection(callback) {
+    bouquetContainer.classList.remove('hidden');
+    // The finishBouquetBtn now handles transitioning to the next step
+    finishBouquetBtn.onclick = (e) => {
+        createRipple(e);
+        if (soundEnabled) playSound('pop');
+        bouquetContainer.classList.add('hidden');
+        if (callback) callback();
+    };
+}
+
 // --- Timeline Logic ---
-function renderTimeline() {
+function renderTimeline(callback) {
     timelineContainer.classList.remove('hidden');
     mainProposalContent.classList.add('hidden');
 
@@ -336,15 +444,16 @@ function renderTimeline() {
         createRipple(e);
         if (soundEnabled) playSound('pop');
         timelineContainer.classList.add('hidden');
-        if (reasons.length > 0) startSlideshow();
-        else showMainProposal();
+        if (callback) callback();
     });
     timelineContainer.appendChild(nextBtn);
 }
 
 // --- Slideshow Logic ---
 let currentSlide = 0;
-function startSlideshow() {
+let slideshowCallback;
+function startSlideshow(callback) {
+    slideshowCallback = callback;
     slideshowContainer.classList.remove('hidden');
     slideshowContainer.classList.add('fade-in-text');
     showSlide(0);
@@ -352,7 +461,7 @@ function startSlideshow() {
 function showSlide(index) {
     if (index >= reasons.length) {
         slideshowContainer.classList.add('hidden');
-        showMainProposal();
+        if (slideshowCallback) slideshowCallback();
         return;
     }
     slideshowText.textContent = reasons[index];
@@ -497,6 +606,8 @@ yesBtn.addEventListener('click', (e) => {
             confetti({ particleCount: particleCount, startVelocity: 30, spread: 360, origin: { x: Math.random(), y: Math.random() - 0.2 }, shapes: shapes });
         }, 250);
         document.getElementById('datePlanner').classList.remove('hidden');
+        document.getElementById('giftContainer').classList.remove('hidden');
+        document.getElementById('giftContainer').classList.add('fade-in-text');
     }, 500);
 });
 
