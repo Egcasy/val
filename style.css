@@ -1,58 +1,64 @@
 :root {
     --primary-color: #ff4d6d;
     --secondary-color: #ff8fa3;
-    --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-    --glass-bg: rgba(255, 255, 255, 0.25);
-    --glass-border: rgba(255, 255, 255, 0.4);
+    --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.2);
     --text-color: #590d22;
     --font-script: 'Great Vibes', cursive;
     --font-body: 'Poppins', sans-serif;
     --cursor-color: #ff4d6d;
 }
 
-/* Themes */
+/* Themes - Professional Palettes */
 body.lavender {
-    --primary-color: #9d4edd;
-    --secondary-color: #e0aaff;
+    --primary-color: #7b2cbf;
+    --secondary-color: #9d4edd;
     --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-    --text-color: #3c096c;
-    --cursor-color: #9d4edd;
+    --glass-shadow: 0 8px 32px 0 rgba(123, 44, 191, 0.2);
+    --text-color: #240046;
+    --cursor-color: #7b2cbf;
 }
 
 body.midnight {
     --primary-color: #ff0054;
     --secondary-color: #ff5400;
     --bg-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    --glass-bg: rgba(0, 0, 0, 0.5);
+    --glass-bg: rgba(0, 0, 0, 0.4);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
     --text-color: #ffe5ec;
     --cursor-color: #ff0054;
 }
 
 body.sunset {
-    --primary-color: #ffba08;
-    --secondary-color: #faa307;
-    --bg-gradient: linear-gradient(135deg, #f48c06 0%, #dc2f02 50%, #9d0208 100%);
-    --glass-bg: rgba(255, 255, 255, 0.2);
-    --glass-border: rgba(255, 255, 255, 0.3);
+    --primary-color: #dc2f02;
+    --secondary-color: #f48c06;
+    --bg-gradient: linear-gradient(135deg, #ff9d00 0%, #dc2f02 100%);
+    --glass-shadow: 0 8px 32px 0 rgba(220, 47, 2, 0.3);
     --text-color: #370617;
-    --cursor-color: #ffba08;
+    --cursor-color: #dc2f02;
 }
 
 body.ocean {
-    --primary-color: #48cae4;
-    --secondary-color: #90e0ef;
-    --bg-gradient: linear-gradient(135deg, #0077b6 0%, #00b4d8 50%, #caf0f8 100%);
-    --text-color: #03045e;
-    --cursor-color: #48cae4;
+    --primary-color: #0077b6;
+    --secondary-color: #00b4d8;
+    --bg-gradient: linear-gradient(135deg, #03045e 0%, #00b4d8 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 119, 182, 0.3);
+    --text-color: #caf0f8;
+    --cursor-color: #0077b6;
 }
 
 body.forest {
-    --primary-color: #588157;
-    --secondary-color: #a3b18a;
-    --bg-gradient: linear-gradient(135deg, #dad7cd 0%, #3a5a40 100%);
-    --text-color: #ffffff;
-    --cursor-color: #dad7cd;
+    --primary-color: #2d6a4f;
+    --secondary-color: #52b788;
+    --bg-gradient: linear-gradient(135deg, #1b4332 0%, #95d5b2 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(45, 106, 79, 0.3);
+    --text-color: #d8f3dc;
+    --cursor-color: #52b788;
 }
 
 * {
@@ -132,36 +138,40 @@ body {
 /* Elements with animations */
 .card {
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 2.5rem;
+    border-radius: 30px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    transition: transform 0.1s ease-out;
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
     transform-style: preserve-3d;
     max-height: 90vh;
-    /* Prevent overflow */
     overflow-y: auto;
-    /* Allow scroll if content is too tall */
+    animation: slideInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 
-    /* Animation */
-    animation: slideInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
 }
 
 .gif-container img {
     max-width: 100%;
-    border-radius: 15px;
-    margin-bottom: 1rem;
-    animation: floatElement 3s ease-in-out infinite;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    animation: floatElement 4s ease-in-out infinite;
 }
 
 #yesBtn {
     animation: pulseBtn 2s infinite;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .fade-in-text {
-    animation: fadeIn 1.5s ease-in;
+    animation: fadeIn 2s ease-in;
 }
 
 
@@ -180,16 +190,17 @@ h2,
 h3 {
     font-family: var(--font-script);
     color: var(--primary-color);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+    line-height: 1.2;
 }
 
 h1 {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: 1.5rem;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     margin-bottom: 1.5rem;
 }
 
@@ -489,32 +500,70 @@ textarea:focus {
 .primary-btn,
 .secondary-btn,
 .date-btn {
-    padding: 12px 30px;
+    padding: 14px 40px;
     border: none;
     border-radius: 50px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: none;
     font-family: var(--font-body);
     font-weight: 600;
-    transition: all 0.3s ease;
-    margin: 5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: 8px;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 .primary-btn {
-    background: var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(255, 77, 109, 0.3);
 }
 
 .primary-btn:hover,
 .date-btn:hover {
-    transform: scale(1.05);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
     filter: brightness(1.1);
 }
 
 .secondary-btn {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.secondary-btn:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.date-btn {
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    color: var(--text-color);
+    border: 1.5px solid var(--glass-border);
+}
+
+/* Button Ripple Effect */
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 .date-options {

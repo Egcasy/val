@@ -111,9 +111,12 @@ function sanitize(str) {
 function sendWebhook(message) {
     if (!webhookUrl) return;
 
-    // Discord-compatible payload structure
+    // Payload designed to be compatible with Discord, Formspree, and ntfy.sh
     const payload = {
-        content: message,
+        message: message, // Flat field for Formspree/ntfy
+        sender: sender,   // Explicit field
+        recipient: recipient, // Explicit field
+        content: message, // For Discord
         username: "Valentine's Cupid 💘",
         embeds: [{
             title: "New Response! 💌",
@@ -280,6 +283,31 @@ function initProposalContent() {
     }
 }
 
+// --- Button Ripple Effect ---
+function createRipple(event) {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    ripple.classList.add('ripple');
+
+    const prevRipple = button.querySelector('.ripple');
+    if (prevRipple) prevRipple.remove();
+
+    button.appendChild(ripple);
+}
+
+// Add ripple to all buttons
+document.querySelectorAll('.primary-btn, .secondary-btn, .date-btn').forEach(btn => {
+    btn.addEventListener('click', createRipple);
+});
+
 // --- Timeline Logic ---
 function renderTimeline() {
     timelineContainer.classList.remove('hidden');
@@ -289,24 +317,28 @@ function renderTimeline() {
         const [date, desc] = evt.split(':');
         const item = document.createElement('div');
         item.classList.add('timeline-item');
-        item.style.animationDelay = `${index * 0.5}s`;
+        // Staggered entry
+        item.style.animationDelay = `${0.3 + index * 0.4}s`;
+        item.style.opacity = "0";
         item.innerHTML = `
-            <div class="timeline-date">${date}</div>
-            <div class="timeline-content">${desc}</div>
+            <div class="timeline-date">${sanitize(date)}</div>
+            <div class="timeline-content">${sanitize(desc)}</div>
         `;
         timeline.appendChild(item);
     });
 
     const nextBtn = document.createElement('button');
     nextBtn.textContent = "Keep Going ❤️";
-    nextBtn.className = "primary-btn";
-    nextBtn.style.marginTop = "20px";
-    nextBtn.onclick = () => {
+    nextBtn.className = "primary-btn fade-in-text";
+    nextBtn.style.marginTop = "30px";
+    nextBtn.style.animationDelay = `${timelineEvents.length * 0.4 + 0.5}s`;
+    nextBtn.addEventListener('click', (e) => {
+        createRipple(e);
         if (soundEnabled) playSound('pop');
         timelineContainer.classList.add('hidden');
         if (reasons.length > 0) startSlideshow();
         else showMainProposal();
-    };
+    });
     timelineContainer.appendChild(nextBtn);
 }
 
@@ -314,6 +346,7 @@ function renderTimeline() {
 let currentSlide = 0;
 function startSlideshow() {
     slideshowContainer.classList.remove('hidden');
+    slideshowContainer.classList.add('fade-in-text');
     showSlide(0);
 }
 function showSlide(index) {
@@ -323,11 +356,15 @@ function showSlide(index) {
         return;
     }
     slideshowText.textContent = reasons[index];
+    slideshowText.classList.remove('fade-in-text');
+    void slideshowText.offsetWidth; // Trigger reflow
+    slideshowText.classList.add('fade-in-text');
 }
-nextSlideBtn.addEventListener('click', () => {
+nextSlideBtn.addEventListener('click', (e) => {
+    createRipple(e);
     if (soundEnabled) playSound('pop');
     currentSlide++;
-    showSlide(currentSlide);
+    setTimeout(() => showSlide(currentSlide), 200);
 });
 
 // --- Main Proposal Logic ---
@@ -427,38 +464,57 @@ noBtn.addEventListener('mouseover', moveNoBtn);
 noBtn.addEventListener('touchstart', moveNoBtn);
 
 // --- Yes Button ---
-yesBtn.addEventListener('click', () => {
+yesBtn.addEventListener('click', (e) => {
+    createRipple(e);
     if (soundEnabled) playSound('success');
-    mainProposalContent.classList.add('hidden');
-    successMode.classList.remove('hidden');
-    if (recipient) successMessage.textContent = `Yay! ${sender} will be so happy! ❤️`;
 
-    sendWebhook(`🎉 **SHE SAID YES!** 🎉\nRecipient: ${recipient}\nSender: ${sender}`);
+    // Smooth transition
+    mainProposalContent.style.transition = "opacity 0.5s ease";
+    mainProposalContent.style.opacity = "0";
 
-    var duration = 5 * 1000;
-    var animationEnd = Date.now() + duration;
+    setTimeout(() => {
+        mainProposalContent.classList.add('hidden');
+        successMode.classList.remove('hidden');
+        successMode.classList.add('fade-in-text');
 
-    var shapes = ['circle', 'square'];
-    if (theme === 'midnight') shapes = ['star'];
-    var interval = setInterval(function () {
-        var timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
-        var particleCount = 50 * (timeLeft / duration);
-        confetti({ particleCount: particleCount, startVelocity: 30, spread: 360, origin: { x: Math.random(), y: Math.random() - 0.2 }, shapes: shapes });
-    }, 250);
-    document.getElementById('datePlanner').classList.remove('hidden');
+        if (customSuccessMsg) {
+            successMessage.textContent = customSuccessMsg;
+        } else if (recipient) {
+            successMessage.textContent = `I knew you'd say Yes! You've made ${sender} the happiest person! ❤️`;
+        }
+
+        sendWebhook(`🎉 **SHE SAID YES!** 🎉\nRecipient: ${recipient}\nSender: ${sender}`);
+
+        var duration = 5 * 1000;
+        var animationEnd = Date.now() + duration;
+
+        var shapes = ['circle', 'square'];
+        if (theme === 'midnight') shapes = ['star'];
+        var interval = setInterval(function () {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            var particleCount = 50 * (timeLeft / duration);
+            confetti({ particleCount: particleCount, startVelocity: 30, spread: 360, origin: { x: Math.random(), y: Math.random() - 0.2 }, shapes: shapes });
+        }, 250);
+        document.getElementById('datePlanner').classList.remove('hidden');
+    }, 500);
 });
 
 dateBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
+        createRipple(e);
         if (soundEnabled) playSound('pop');
         const choice = e.target.getAttribute('data-date');
         dateFeedback.classList.remove('hidden');
-        dateFeedback.textContent = `Great choice! Take a screenshot and send it to ${sender}: ${choice}`;
-        dateBtns.forEach(b => b.disabled = true);
+        dateFeedback.classList.add('fade-in-text');
+        dateFeedback.innerHTML = `🌟 <strong>Perfect Choice!</strong> 🌟<br>Take a screenshot and share it with ${sender}!<br>Plan: ${choice}`;
+        dateBtns.forEach(b => {
+            b.disabled = true;
+            b.style.opacity = "0.5";
+        });
 
         sendWebhook(`📅 **Date Idea Selected:** ${choice}\nBy: ${recipient}`);
 
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff0054', '#ffffff'] });
     });
 });
