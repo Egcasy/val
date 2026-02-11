@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="background-hearts"></div>
+    
+    <div class="container" id="mainContainer">
+        <!-- Creator Mode -->
+        <div id="creatorMode" class="card hidden">
+            <h1>Create a Valentine</h1>
+            <p>Make a special personalized page regarding Valentine's Day.</p>
+            <div class="input-group">
+                <input type="text" id="senderName" placeholder="Your Name" required>
+                <input type="text" id="recipientName" placeholder="Their Name" required>
+            </div>
+            <button id="createBtn" class="primary-btn">Create Link</button>
+            <div id="linkOutput" class="hidden">
+                <input type="text" id="generatedLink" readonly>
+                <button id="copyBtn" class="secondary-btn">Copy</button>
+            </div>
+        </div>
+
+        <!-- Proposal Mode -->
+        <div id="proposalMode" class="card hidden">
+            <h1 id="proposalText">Will you be my Valentine?</h1>
+            <div class="gif-container">
+                <img src="https://media.tenor.com/K2OG19K3fjoAAAAi/mochi-peach.gif" alt="Cute begging bear" id="mainGif">
+            </div>
+            <div class="buttons">
+                <button id="yesBtn" class="primary-btn">Yes</button>
+                <button id="noBtn" class="secondary-btn">No</button>
+            </div>
+        </div>
+
+        <!-- Success Mode -->
+        <div id="successMode" class="card hidden">
+            <h1>YAY! ❤️</h1>
+            <p id="successMessage">I knew you would say yes!</p>
+            <div class="gif-container">
+                <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy kissing bears">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

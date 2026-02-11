@@ -1,0 +1,165 @@
+:root {
+    --primary-color: #ff4d6d;
+    --secondary-color: #ff8fa3;
+    --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --text-color: #590d22;
+    --font-script: 'Great Vibes', cursive;
+    --font-body: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-gradient);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-body);
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+.background-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Floating Heart Animation */
+.heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    animation: float 6s linear infinite;
+    font-size: 20px;
+}
+
+@keyframes float {
+    0% { transform: translateY(110vh) scale(0); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-family: var(--font-script);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #a4133c;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.8);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+}
+
+.primary-btn, .secondary-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.primary-btn {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+}
+
+.primary-btn:hover {
+    transform: scale(1.05);
+    background: #ff2a51;
+}
+
+.secondary-btn {
+    background: white;
+    color: var(--primary-color);
+    margin-left: 10px;
+}
+
+.buttons {
+    margin-top: 1.5rem;
+    position: relative;
+    /* Ensure container has height for absolute positioning if needed */
+    min-height: 60px; 
+}
+
+#noBtn {
+    position: relative; /* Starts relative, becomes absolute on hover */
+    transition: all 0.2s ease;
+}
+
+.gif-container img {
+    max-width: 100%;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+#linkOutput {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
