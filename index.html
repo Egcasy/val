@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +13,13 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="background-hearts"></div>
     <div class="custom-cursor"></div>
-
     <div class="container">
         <div id="creatorMode" class="card">
             <h1>Create a Valentine</h1>
             <p>Make a special personalized page regarding Valentine's Day.</p>
-
             <div class="input-group">
                 <label>Theme:</label>
                 <select id="themeSelector">
@@ -33,28 +29,52 @@
                     <option value="sunset">Sunset Glow</option>
                     <option value="ocean">Ocean Breeze</option>
                     <option value="forest">Enchanted Forest</option>
+                    <option value="custom">🎨 Custom (Use colors below)</option>
                 </select>
+                <div id="customThemeSection" class="hidden" style="background: rgba(255,255,255,0.3); padding: 1rem; border-radius: 10px; margin-top: 0.5rem;">
+                    <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Custom Theme Colors:</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <div>
+                            <label style="font-size: 0.8rem;">Primary Color:</label>
+                            <input type="color" id="customPrimary" value="#ff4d6d">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem;">Secondary Color:</label>
+                            <input type="color" id="customSecondary" value="#ff8fa3">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem;">Gradient Start:</label>
+                            <input type="color" id="customGradientStart" value="#ff9a9e">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem;">Gradient End:</label>
+                            <input type="color" id="customGradientEnd" value="#fecfef">
+                        </div>
+                    </div>
+                </div>
                 <input type="text" id="senderName" placeholder="Your Name" required>
                 <input type="text" id="recipientName" placeholder="Their Name" required>
                 <textarea id="loveNote" placeholder="Write a short love note..." rows="3"></textarea>
-
                 <p style="font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">Optional Features:</p>
-
                 <input type="text" id="quizQuestion" placeholder="Quiz Question (e.g., Where did we meet?)">
                 <input type="text" id="quizAnswer" placeholder="Quiz Answer (e.g., Paris)">
-
                 <input type="text" id="musicUrl" placeholder="YouTube Music Link (e.g., https://youtu.be/...)">
-
                 <label>Start Date (Relationship Timer):</label>
                 <input type="date" id="startDate">
-
                 <label>Unlock Time (Open When):</label>
                 <input type="datetime-local" id="unlockTime">
-
+                <label>Link Expires At (Optional):</label>
+                <input type="datetime-local" id="expiryTime">
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="oneTimeOpen" style="width:auto;"> One-time Open Only 🔒
+                </label>
                 <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                     <input type="checkbox" id="enableSound" style="width:auto;"> Enable Sound Effects 🎵
                 </label>
-
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">Custom Button Text (Optional):</p>
+                <input type="text" id="customYesText" placeholder="Custom 'Yes' Button (default: Yes)">
+                <input type="text" id="customNoText" placeholder="Custom 'No' Button (default: No)">
+                <input type="text" id="customSuccessMsg" placeholder="Custom Success Message">
                 <p style="font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600;">"Our Story" Timeline (Optional):</p>
                 <div class="timeline-input-group">
                     <input type="text" class="timeline-date-in" placeholder="Date (e.g. 2023)">
@@ -64,13 +84,12 @@
                     <input type="text" class="timeline-date-in" placeholder="Date">
                     <input type="text" class="timeline-desc-in" placeholder="Event">
                 </div>
-
+                <input type="text" id="webhookUrl" placeholder="Webhook URL (Optional - for response tracking)">
                 <p style="font-size: 0.9rem; margin-top: 0.5rem;">3 Reasons you love them (optional):</p>
                 <input type="text" class="reason-input" placeholder="Reason 1">
                 <input type="text" class="reason-input" placeholder="Reason 2">
                 <input type="text" class="reason-input" placeholder="Reason 3">
             </div>
-
             <button id="createBtn" class="primary-btn">Create Link</button>
             <div id="linkOutput" class="hidden">
                 <input type="text" id="generatedLink" readonly>
@@ -78,9 +97,8 @@
             </div>
         </div>
     </div>
-
     <!-- JS Logic specific to Creator -->
     <script src="script.js"></script>
 </body>
-
+</html>
 </html>

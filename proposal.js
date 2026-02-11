@@ -87,9 +87,62 @@ const soundEnabled = params.get('sound') === 'true';
 const quizQ = params.get('quizQ');
 const quizA = params.get('quizA');
 const musicId = params.get('music');
+const webhookUrl = params.get('webhook');
+const expiryTimeParam = params.get('expiry');
+const oneTimeParam = params.get('oneTime') === 'true';
+const customYesText = params.get('yesText');
+const customNoText = params.get('noText');
+const customSuccessMsg = params.get('successMsg');
+const customPrimary = params.get('cp');
+const customSecondary = params.get('cs');
+const customGradient1 = params.get('cg1');
+const customGradient2 = params.get('cg2');
+
+
+// Security: Sanitize user inputs to prevent XSS
+function sanitize(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// Webhook Sender
+function sendWebhook(message) {
+    if (!webhookUrl) return;
+
+    // Discord-compatible payload structure
+    const payload = {
+        content: message,
+        username: "Valentine's Cupid 💘",
+        embeds: [{
+            title: "New Response! 💌",
+            description: message,
+            color: 16738740 // Pinkish
+        }]
+    };
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).catch(err => console.error("Webhook Error:", err));
+}
 
 // Apply Theme
 document.body.className = theme;
+
+// Apply custom theme colors if theme is 'custom'
+if (theme === 'custom' && customPrimary) {
+    document.documentElement.style.setProperty('--primary-color', customPrimary);
+    document.documentElement.style.setProperty('--secondary-color', customSecondary || customPrimary);
+    if (customGradient1 && customGradient2) {
+        const gradient = `linear-gradient(135deg, ${customGradient1} 0%, ${customGradient2} 100%)`;
+        document.documentElement.style.setProperty('--bg-gradient', gradient);
+    }
+    document.documentElement.style.setProperty('--cursor-color', customPrimary);
+}
+
 const originalTitle = `For ${recipient} ❤️`;
 document.title = originalTitle;
 
@@ -128,6 +181,11 @@ const noBtn = document.getElementById('noBtn');
 const dateBtns = document.querySelectorAll('.date-btn');
 const dateFeedback = document.getElementById('dateFeedback');
 const successMode = document.getElementById('successMode');
+
+// Apply custom button text if provided
+if (customYesText) yesBtn.textContent = customYesText;
+if (customNoText) noBtn.textContent = customNoText;
+
 
 // --- Lock Screen Logic ---
 if (unlockTimeParam) {
@@ -375,6 +433,8 @@ yesBtn.addEventListener('click', () => {
     successMode.classList.remove('hidden');
     if (recipient) successMessage.textContent = `Yay! ${sender} will be so happy! ❤️`;
 
+    sendWebhook(`🎉 **SHE SAID YES!** 🎉\nRecipient: ${recipient}\nSender: ${sender}`);
+
     var duration = 5 * 1000;
     var animationEnd = Date.now() + duration;
 
@@ -396,6 +456,9 @@ dateBtns.forEach(btn => {
         dateFeedback.classList.remove('hidden');
         dateFeedback.textContent = `Great choice! Take a screenshot and send it to ${sender}: ${choice}`;
         dateBtns.forEach(b => b.disabled = true);
+
+        sendWebhook(`📅 **Date Idea Selected:** ${choice}\nBy: ${recipient}`);
+
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     });
 });
